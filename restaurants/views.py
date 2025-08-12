@@ -1,22 +1,24 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.utils.timezone import now
 
 from .models import Restaurant, Menu
 from .serializers import RestaurantSerializer, MenuSerializer
 
-# Create your views here.
 
-
-# POST /api/restaurants/
+# POST /api/restaurants/  — доступно лише авторизованим
 class RestaurantCreateView(generics.CreateAPIView):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
+    permission_classes = [IsAuthenticated]   # або можна не вказувати, якщо DEFAULT_PERMISSION_CLASSES = IsAuthenticated
 
 
-# POST /api/restaurants/{id}/menu/
+# POST /api/restaurants/{id}/menu/ — доступно лише авторизованим
 class MenuCreateView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request, pk):
         try:
             restaurant = Restaurant.objects.get(pk=pk)
@@ -25,15 +27,22 @@ class MenuCreateView(APIView):
 
         serializer = MenuSerializer(data=request.data)
         if serializer.is_valid():
+            # перевірка unique_together (restaurant, date) може викликати IntegrityError, можна перевірити заздалегідь:
+            date = serializer.validated_data.get('date') # type: ignore
+            if Menu.objects.filter(restaurant=restaurant, date=date).exists():
+                return Response({"detail": "Menu for this restaurant and date already exists"},
+                                status=status.HTTP_400_BAD_REQUEST)
+
             serializer.save(restaurant=restaurant)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# GET /api/restaurants/menu/today/
+# GET /api/restaurants/menu/today/ — відкрито для всіх
 class TodayMenuListView(generics.ListAPIView):
     serializer_class = MenuSerializer
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         today = now().date()
