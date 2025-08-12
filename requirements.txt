@@ -5,5 +5,6 @@ psycopg2-binary
 gunicorn
 pytest
 pytest-django
+pytest-cov
 flake8
 python-dotenv
