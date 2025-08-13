@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import Vote
-from restaurants.models import Menu
 from django.utils.timezone import now
 
 

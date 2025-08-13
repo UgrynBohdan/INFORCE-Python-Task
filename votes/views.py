@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from django.utils.timezone import now
 from django.db.models import Count
 
-from .models import Vote
 from .serializers import VoteSerializer, VoteResultSerializer
 from restaurants.models import Menu
 
