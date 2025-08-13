@@ -3,7 +3,8 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-# load_dotenv()
+# Якщо запускати через докер - потрібно завантажувати змінні середовища
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

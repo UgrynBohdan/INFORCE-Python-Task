@@ -19,3 +19,5 @@ Votes
 POST /api/votes/ — голосування за меню
 
 GET /api/votes/results/today/ — результати голосування на сьогодні
+
+docker tag inforce_python_task4-web:latest ugrynbogdan/inforce_task-web:latest
