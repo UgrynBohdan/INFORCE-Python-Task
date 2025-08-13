@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 import os
 from dotenv import load_dotenv
@@ -45,8 +46,19 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',  # за замовчуванням захищає всі ендпоінти
+        'rest_framework.permissions.IsAuthenticated',
     ),
+}
+
+SIMPLE_JWT = {
+    # Термін дії токена доступу (access token).
+    # Зазвичай він коротший для безпеки. Тут встановлено 5 хвилин.
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+
+    # Термін дії токена оновлення (refresh token).
+    # Зазвичай він довший. Тут встановлено 1 день.
+    # Refresh token використовується для отримання нового access token без повторної авторизації.
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
 MIDDLEWARE = [

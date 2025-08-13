@@ -12,7 +12,7 @@ from .serializers import RestaurantSerializer, MenuSerializer
 class RestaurantCreateView(generics.CreateAPIView):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
-    permission_classes = [IsAuthenticated]   # або можна не вказувати, якщо DEFAULT_PERMISSION_CLASSES = IsAuthenticated
+    permission_classes = [IsAuthenticated]
 
 
 # POST /api/restaurants/{id}/menu/ — доступно лише авторизованим
@@ -27,7 +27,7 @@ class MenuCreateView(APIView):
 
         serializer = MenuSerializer(data=request.data)
         if serializer.is_valid():
-            # перевірка unique_together (restaurant, date) може викликати IntegrityError, можна перевірити заздалегідь:
+            # перевірка unique_together (restaurant, date) може викликати IntegrityError, виконуємо додаткову перевірку, щоб запобігти створенню дублікатів
             date = serializer.validated_data.get('date') # type: ignore
             if Menu.objects.filter(restaurant=restaurant, date=date).exists():
                 return Response({"detail": "Menu for this restaurant and date already exists"},
@@ -40,6 +40,7 @@ class MenuCreateView(APIView):
 
 
 # GET /api/restaurants/menu/today/ — відкрито для всіх
+# Переключаємо версії API залежно від клієнта
 class TodayMenuListRouter(APIView):
     permission_classes = [AllowAny]
 
