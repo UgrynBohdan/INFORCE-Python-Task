@@ -40,7 +40,26 @@ class MenuCreateView(APIView):
 
 
 # GET /api/restaurants/menu/today/ — відкрито для всіх
-class TodayMenuListView(generics.ListAPIView):
+class TodayMenuListRouter(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        if getattr(request, "is_legacy_client", False):
+            return TodayMenuListViewV1.as_view()(request._request, *args, **kwargs)
+        else:
+            return TodayMenuListViewV2.as_view()(request._request, *args, **kwargs)
+
+
+# --- TODAY MENU V1 (Legacy) ---
+class TodayMenuListViewV1(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        return Response({"message": "This is a legacy version of the API. Please update your app."})
+
+
+# --- TODAY MENU V2 (Current logic) ---
+class TodayMenuListViewV2(generics.ListAPIView):
     serializer_class = MenuSerializer
     permission_classes = [AllowAny]
 
