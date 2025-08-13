@@ -53,6 +53,42 @@ The backend supports multiple versions of the mobile app by reading the **`Build
 
 ---
 
+## Running with Docker Compose
+
+### Prerequisites
+
+- Docker
+- Docker Compose
+
+### Steps
+
+1. **Copy docker-compose.yml files from GitHub**
+
+2. **Configure environment variables (create .env file)**  
+   Example:
+
+   ```env
+   POSTGRES_DB=inforceTask
+   POSTGRES_USER=postgres
+   POSTGRES_PASSWORD=12345678
+   DB_HOST=localhost
+   DB_PORT=5432
+   ```
+
+3. **Start containers**
+
+   ```bash
+   docker-compose up
+   ```
+
+4. **Access the application**
+
+   ```
+   http://localhost:8000
+   ```
+
+---
+
 ## Running Locally (Manual Setup)
 
 ### Prerequisites
@@ -83,41 +119,27 @@ The backend supports multiple versions of the mobile app by reading the **`Build
    pip install -r requirements.txt
    ```
 
-4. **Apply migrations**
+4. **Configure environment variables (create .env file)**  
+   Example:
+
+   ```env
+   POSTGRES_DB=inforceTask
+   POSTGRES_USER=postgres
+   POSTGRES_PASSWORD=12345678
+   DB_HOST=localhost
+   DB_PORT=5432
+   ```
+
+5. **Apply migrations**
 
    ```bash
    python manage.py migrate
    ```
 
-5. **Run the development server**
+6. **Run the development server**
 
    ```bash
    python manage.py runserver
-   ```
-
----
-
-## Running with Docker Compose
-
-### Prerequisites
-
-- Docker
-- Docker Compose
-
-### Steps
-
-1. **Copy docker-compose.yml and .env files from GitHub**
-
-2. **Start containers**
-
-   ```bash
-   docker-compose up
-   ```
-
-3. **Access the application**
-
-   ```
-   http://localhost:8000
    ```
 
 ---
